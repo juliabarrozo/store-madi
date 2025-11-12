@@ -1,0 +1,155 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  ADMIN
+  CLIENT
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String    @unique
+  password    String
+  ddd         String
+  phone       String    @unique
+  role        UserRole  @default(CLIENT)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+
+  addresses Address[] @relation("UserAddresses")
+  cartItems   CartItem[]
+  favoriteProducts   FavoriteProduct[]
+  orders      Order[]
+}
+
+model Brand {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  products    Product[]
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  size        String?
+  color       String?
+  price       Float
+  brandId     Int
+  brand       Brand     @relation(fields: [brandId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  cartItems   CartItem[]
+  favoritedBy FavoriteProduct[]
+  comboItemsA ComboProduct[] @relation("ComboA")
+  comboItemsB ComboProduct[] @relation("ComboB")
+  orderItems  OrderItem[]
+}
+
+model ComboProduct {
+  id          Int       @id @default(autoincrement())
+  productAId  Int
+  productBId  Int
+
+  productA    Product   @relation("ComboA", fields: [productAId], references: [id])
+  productB    Product   @relation("ComboB", fields: [productBId], references: [id])
+
+  createdAt   DateTime  @default(now())
+}
+
+model CartItem {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  productId   Int
+  quantity    Int       @default(1)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id])
+  product     Product   @relation(fields: [productId], references: [id])
+}
+
+model FavoriteProduct {
+  id          Int       @id @default(autoincrement())
+  userId  Int
+  productId   Int
+
+  user    User  @relation(fields: [userId], references: [id])
+  product     Product   @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId])
+}
+
+model Order {
+  id          Int        @id @default(autoincrement())
+  userId      Int
+  total       Float
+  status      OrderStatus @default(PENDING)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  user        User       @relation(fields: [userId], references: [id])
+  items       OrderItem[]
+  payment     Payment?
+}
+
+model OrderItem {
+  id          Int       @id @default(autoincrement())
+  orderId     Int
+  productId   Int
+  quantity    Int       @default(1)
+  price       Float     // preço no momento da compra
+  createdAt   DateTime  @default(now())
+
+  order       Order     @relation(fields: [orderId], references: [id])
+  product     Product   @relation(fields: [productId], references: [id])
+}
+
+model Payment {
+  id          Int       @id @default(autoincrement())
+  orderId     Int       @unique
+  method      String    // ex: cartão, boleto, pix
+  amount      Float
+  paidAt      DateTime?
+  status      PaymentStatus @default(PENDING)
+  createdAt   DateTime  @default(now())
+
+  order       Order     @relation(fields: [orderId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model Address {
+  id        Int    @id @default(autoincrement())
+  userId    Int
+  street    String
+  city      String
+  state     String
+  zipCode   String
+  country   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], name: "UserAddresses")
+}
