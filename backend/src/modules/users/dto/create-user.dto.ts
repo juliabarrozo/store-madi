@@ -1,24 +1,19 @@
-import { UserRole } from "@prisma/client"
-import { IsEnum, IsInt, IsNotEmpty, IsString, MinLength } from "class-validator"
+import { CartItem, FavoriteProduct, Order, UserRole } from "@prisma/client"
+import { IsArray, IsEnum, IsInt, IsNotEmpty, IsString, MinLength } from "class-validator"
 
 export class CreateUserDto {
-
+    @IsString()
     @IsNotEmpty()
-    @IsInt()
-    id: number;
+    name: string;
 
     @IsString()
     @IsNotEmpty()
-    name: String;
-
-    @IsString()
-    @IsNotEmpty()
-    email: String;
+    email: string;
 
     @IsString()
     @MinLength(6)
     @IsNotEmpty()
-    password: String;
+    password: string;
 
     @IsNotEmpty()
     @IsEnum(UserRole)
@@ -26,9 +21,9 @@ export class CreateUserDto {
 
     @IsNotEmpty()
     @IsString()
-    ddd: String;
+    ddd: string;
 
     @IsNotEmpty()
     @IsString()
-    phone: String;
+    phone: string;
 }

@@ -43,6 +43,7 @@ model Product {
   size        String?
   color       String?
   price       Float
+  stock       Int @default(0)
   brandId     Int
   brand       Brand     @relation(fields: [brandId], references: [id])
   createdAt   DateTime  @default(now())

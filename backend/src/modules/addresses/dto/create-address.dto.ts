@@ -4,29 +4,25 @@ export class CreateAddressDto {
 
     @IsInt()
     @IsNotEmpty()
-    id: number;
-
-    @IsInt()
-    @IsNotEmpty()
     userId: number;
 
     @IsString()
     @IsNotEmpty()
-    street: String;
+    street: string;
 
     @IsString()
     @IsNotEmpty()
-    city: String;
+    city: string;
 
     @IsString()
     @IsNotEmpty()
-    state: String;
+    state: string;
 
     @IsString()
     @IsNotEmpty()
-    zipCode: String;
+    zipCode: string;
 
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
-    country: String;
+    country: string;
 }

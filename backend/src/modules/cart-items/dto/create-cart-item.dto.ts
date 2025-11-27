@@ -4,10 +4,6 @@ export class CreateCartItemDto {
 
     @IsInt()
     @IsNotEmpty()
-    id: number;
-
-    @IsInt()
-    @IsNotEmpty()
     userId: number;
 
     @IsInt()

@@ -1,26 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFavoriteProductDto } from './dto/create-favorite-product.dto';
 import { UpdateFavoriteProductDto } from './dto/update-favorite-product.dto';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class FavoriteProductsService {
-  create(createFavoriteProductDto: CreateFavoriteProductDto) {
-    return 'This action adds a new favoriteProduct';
+  constructor(private prisma: PrismaService) {}
+  async create(data: CreateFavoriteProductDto) {
+    return this.prisma.favoriteProduct.create({ data });
   }
 
-  findAll() {
-    return `This action returns all favoriteProducts`;
+  async findAll() {
+    return this.prisma.favoriteProduct.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} favoriteProduct`;
+  async findOne(id: number) {
+    const favoriteProduct = await this.prisma.favoriteProduct.findUnique({ where: { id } });
+    if (!favoriteProduct) {
+      throw new NotFoundException(`Favorito com ID ${id} não encontrado.`);
+    }
   }
 
-  update(id: number, updateFavoriteProductDto: UpdateFavoriteProductDto) {
-    return `This action updates a #${id} favoriteProduct`;
+  async update(id: number, data: UpdateFavoriteProductDto) {
+    // Verifica se o pedido existe antes de tentar atualizar
+    const favoriteProduct = await this.prisma.favoriteProduct.findUnique({ where: { id } });
+    if (!favoriteProduct) {
+      throw new NotFoundException(`Favorito com ID ${id} não encontrado.`);
+    }
+    return this.prisma.favoriteProduct.update({where: {id}, data});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} favoriteProduct`;
+  async remove(id: number) {
+    const favoriteProduct = await this.prisma.favoriteProduct.findUnique({ where: { id } });
+    if (!favoriteProduct) {
+      throw new NotFoundException(`Favorito com ID ${id} não encontrado.`);
+    }
+    return this.prisma.favoriteProduct.delete({where: {id}});
   }
 }

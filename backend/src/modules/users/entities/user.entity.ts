@@ -1,11 +1,18 @@
-import { UserRole } from "@prisma/client";
+import { Address, CartItem, FavoriteProduct, Order, UserRole } from "@prisma/client";
 
 export class User {
     id: number;
-    name: String;
-    email: String;
-    password: String;
+    name: string;
+    email: string;
+    password: string;
     role?: UserRole;
-    ddd: String;
-    phone: String;
+    ddd: string;
+    phone: string;
+    createdAt: Date;
+    updatedAt: Date;
+
+    cartItems?: CartItem[];
+    favoriteProducts?: FavoriteProduct[];
+    orders?: Order[];
+    addresses?: Address[];
 }

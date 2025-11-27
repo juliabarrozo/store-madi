@@ -1,3 +1,5 @@
+import { Brand, CartItem, ComboProduct, FavoriteProduct, OrderItem } from "@prisma/client";
+
 export class Product {
     id: number;
     name: string;
@@ -5,5 +7,13 @@ export class Product {
     color?: string;
     size?: string;
     price: number;
-    brandId: number; 
+    stock: number;
+    brandId: number;
+    cartItems: CartItem[];
+    favoritedBy: FavoriteProduct[];
+    orderItems: OrderItem[];
+
+    brand?: Brand;
+    comboItemsA?: ComboProduct[];
+    comboItemsB?: ComboProduct[];
 }

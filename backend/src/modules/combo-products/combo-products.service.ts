@@ -1,26 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateComboProductDto } from './dto/create-combo-product.dto';
 import { UpdateComboProductDto } from './dto/update-combo-product.dto';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class ComboProductsService {
-  create(createComboProductDto: CreateComboProductDto) {
-    return 'This action adds a new comboProduct';
+  constructor(private prisma: PrismaService) {}
+  async create(data: CreateComboProductDto) {
+    return this.prisma.comboProduct.create({ data });
   }
 
-  findAll() {
-    return `This action returns all comboProducts`;
+  async findAll() {
+    return this.prisma.comboProduct.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} comboProduct`;
+  async findOne(id: number) {
+    const comboProduct = await this.prisma.comboProduct.findUnique({ where: { id } });
+    if (!comboProduct) {
+      throw new NotFoundException(`Combo com ID ${id} não encontrado.`);
+    }
   }
 
-  update(id: number, updateComboProductDto: UpdateComboProductDto) {
-    return `This action updates a #${id} comboProduct`;
+  async update(id: number, data: UpdateComboProductDto) {
+    // Verifica se o pedido existe antes de tentar atualizar
+    const comboProduct = await this.prisma.comboProduct.findUnique({ where: { id } });
+    if (!comboProduct) {
+      throw new NotFoundException(`Combo com ID ${id} não encontrado.`);
+    }
+    return this.prisma.comboProduct.update({ where : { id }, data });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} comboProduct`;
+  async remove(id: number) {
+    const comboProduct = await this.prisma.comboProduct.findUnique({ where: { id } });
+    if (!comboProduct) {
+      throw new NotFoundException(`Combo com ID ${id} não encontrado.`);
+    }
+    return this.prisma.comboProduct.delete({ where : {id} });
   }
 }

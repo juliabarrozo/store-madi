@@ -1,3 +1,5 @@
+import { Product, User } from "@prisma/client";
+
 export class CartItem {
     id: number;
     idUser: number;
@@ -6,4 +8,6 @@ export class CartItem {
     createdAt: Date;
     updatedAt: Date;
 
+    user?: User;
+    product?: Product;
 }

@@ -1,11 +1,8 @@
-import { OrderStatus } from "@prisma/client";
+import { OrderStatus, Payment } from "@prisma/client";
 import { IsEnum, IsInt, IsNotEmpty, IsNumber } from "class-validator";
+import { CreateOrderItemDto } from "src/modules/order-items/dto/create-order-item.dto";
 
-export class CreateOrderDto {
-    @IsInt()
-    @IsNotEmpty()
-    id: number;
-    
+export class CreateOrderDto {  
     @IsNumber()
     @IsNotEmpty()
     total: number;
@@ -17,4 +14,8 @@ export class CreateOrderDto {
     @IsInt()
     @IsNotEmpty()
     userId: number;
+
+    items: CreateOrderItemDto[]
+
+    payment?: Payment
 }

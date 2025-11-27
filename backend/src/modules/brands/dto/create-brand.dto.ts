@@ -1,11 +1,7 @@
-import { IsInt, IsNotEmpty, IsString } from "class-validator";
+import { Product } from "@prisma/client";
+import { IsArray, IsNotEmpty, IsString } from "class-validator";
 
 export class CreateBrandDto {
-
-    @IsNotEmpty()
-    @IsInt()
-    id: number;
-
     @IsNotEmpty()
     @IsString()
     name: string;

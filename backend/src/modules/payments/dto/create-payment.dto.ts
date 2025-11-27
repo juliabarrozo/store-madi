@@ -13,7 +13,7 @@ export class CreatePaymentDto {
 
     @IsNotEmpty()
     @IsString()
-    method: String;
+    method: string;
 
     @IsNotEmpty()
     @IsNumber()

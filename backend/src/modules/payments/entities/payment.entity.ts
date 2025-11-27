@@ -1,12 +1,13 @@
-import { PaymentStatus } from "@prisma/client";
+import { Order, PaymentStatus } from "@prisma/client";
 
 export class Payment {
-    
         id: number;
         orderId: number;
-        method: String;
+        method: string;
         amount: number;
         paidAt: Date;
         paymentStatus: PaymentStatus;
         createdAt: Date;
+
+        order?: Order;
 }

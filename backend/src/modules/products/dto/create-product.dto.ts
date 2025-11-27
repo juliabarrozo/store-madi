@@ -1,4 +1,5 @@
-import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { CartItem, FavoriteProduct, OrderItem } from "@prisma/client";
+import { IsArray, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateProductDto {
     @IsNotEmpty()
@@ -27,4 +28,8 @@ export class CreateProductDto {
     @IsNotEmpty()
     @IsInt()
     brandId: number; 
+
+    @IsInt()
+    @IsNotEmpty()
+    stock: number;
 }

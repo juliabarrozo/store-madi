@@ -1,26 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCartItemDto } from './dto/create-cart-item.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
+import { PrismaService } from 'src/prisma.service';
+import { User
 
+ } from '@prisma/client';
 @Injectable()
 export class CartItemsService {
-  create(createCartItemDto: CreateCartItemDto) {
-    return 'This action adds a new cartItem';
+  constructor(private prisma: PrismaService) {}
+
+  async create(data: CreateCartItemDto) {
+    return this.prisma.cartItem.create({ data })
   }
 
-  findAll() {
-    return `This action returns all cartItems`;
+  async getUserCartById(userId: number) {
+    return this.prisma.cartItem.findMany({ where : { userId }, include : {product: true, user: true}})
+  }
+  
+  async findOne(id: number) {
+    const cartItem = await this.prisma.cartItem.findUnique({ where: { id } });
+    if (!cartItem) {
+      throw new NotFoundException(`Item do carrinho com ID ${id} não encontrado.`);
+    }  }
+
+  async update(id: number, data: UpdateCartItemDto) {
+    const cartItem = await this.prisma.cartItem.findUnique({ where: { id } });
+    if (!cartItem) {
+      throw new NotFoundException(`Item do carrinho com ID ${id} não encontrado.`);
+    }
+    return this.prisma.cartItem.update( { where : { id }, data});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cartItem`;
-  }
-
-  update(id: number, updateCartItemDto: UpdateCartItemDto) {
-    return `This action updates a #${id} cartItem`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} cartItem`;
+  async remove(id: number) {
+    const cartItem = await this.prisma.cartItem.findUnique({ where: { id } });
+    if (!cartItem) {
+      throw new NotFoundException(`Item do carrinho com ID ${id} não encontrado.`);
+    }
+    return this.prisma.cartItem.delete({ where : { id }});
   }
 }

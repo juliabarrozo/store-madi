@@ -1,9 +1,13 @@
+import { User } from "@prisma/client";
+
 export class Address {
     id: number;
     userId: number;
-    street: String;
-    city: String;
-    state: String;
-    zipCode: String;
-    country: String;
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+    
+    user?: User;
 }
