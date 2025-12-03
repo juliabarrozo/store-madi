@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateComboProductDto } from './dto/create-combo-product.dto';
 import { UpdateComboProductDto } from './dto/update-combo-product.dto';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../../prisma.service';
 
 @Injectable()
 export class ComboProductsService {
   constructor(private prisma: PrismaService) {}
+
   async create(data: CreateComboProductDto) {
     return this.prisma.comboProduct.create({ data });
   }
@@ -19,6 +20,7 @@ export class ComboProductsService {
     if (!comboProduct) {
       throw new NotFoundException(`Combo com ID ${id} não encontrado.`);
     }
+    return comboProduct;
   }
 
   async update(id: number, data: UpdateComboProductDto) {
